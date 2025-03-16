@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "KUfEGPmnyOrgZ6zvqhvoPKo6wkj8YjzbixPQHD0tKgM=",
+  "Source": "SmallInvoiceAPI01",
+  "BasePath": "_content/SmallInvoiceAPI01",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

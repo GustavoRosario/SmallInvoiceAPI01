@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\SmallInvoiceAPI01.props" />
+</Project>

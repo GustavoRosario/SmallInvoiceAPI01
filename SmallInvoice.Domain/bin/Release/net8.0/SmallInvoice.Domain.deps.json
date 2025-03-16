@@ -1,0 +1,36 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "SmallInvoice.Domain/1.0.0": {
+        "dependencies": {
+          "SmallInvoice.Application": "1.0.0"
+        },
+        "runtime": {
+          "SmallInvoice.Domain.dll": {}
+        }
+      },
+      "SmallInvoice.Application/1.0.0": {
+        "runtime": {
+          "SmallInvoice.Application.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "SmallInvoice.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "SmallInvoice.Application/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

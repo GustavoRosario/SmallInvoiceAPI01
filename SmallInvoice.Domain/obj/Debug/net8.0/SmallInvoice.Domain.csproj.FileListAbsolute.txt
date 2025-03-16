@@ -1,0 +1,15 @@
+C:\Users\Dell\source\repos\SmallInvoiceAPI01\SmallInvoice.Domain\bin\Debug\net8.0\SmallInvoice.Domain.deps.json
+C:\Users\Dell\source\repos\SmallInvoiceAPI01\SmallInvoice.Domain\bin\Debug\net8.0\SmallInvoice.Domain.dll
+C:\Users\Dell\source\repos\SmallInvoiceAPI01\SmallInvoice.Domain\bin\Debug\net8.0\SmallInvoice.Domain.pdb
+C:\Users\Dell\source\repos\SmallInvoiceAPI01\SmallInvoice.Domain\bin\Debug\net8.0\SmallInvoice.Application.dll
+C:\Users\Dell\source\repos\SmallInvoiceAPI01\SmallInvoice.Domain\bin\Debug\net8.0\SmallInvoice.Application.pdb
+C:\Users\Dell\source\repos\SmallInvoiceAPI01\SmallInvoice.Domain\obj\Debug\net8.0\SmallInvoice.Domain.csproj.AssemblyReference.cache
+C:\Users\Dell\source\repos\SmallInvoiceAPI01\SmallInvoice.Domain\obj\Debug\net8.0\SmallInvoice.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Dell\source\repos\SmallInvoiceAPI01\SmallInvoice.Domain\obj\Debug\net8.0\SmallInvoice.Domain.AssemblyInfoInputs.cache
+C:\Users\Dell\source\repos\SmallInvoiceAPI01\SmallInvoice.Domain\obj\Debug\net8.0\SmallInvoice.Domain.AssemblyInfo.cs
+C:\Users\Dell\source\repos\SmallInvoiceAPI01\SmallInvoice.Domain\obj\Debug\net8.0\SmallInvoice.Domain.csproj.CoreCompileInputs.cache
+C:\Users\Dell\source\repos\SmallInvoiceAPI01\SmallInvoice.Domain\obj\Debug\net8.0\SmallInv.CBB21461.Up2Date
+C:\Users\Dell\source\repos\SmallInvoiceAPI01\SmallInvoice.Domain\obj\Debug\net8.0\SmallInvoice.Domain.dll
+C:\Users\Dell\source\repos\SmallInvoiceAPI01\SmallInvoice.Domain\obj\Debug\net8.0\refint\SmallInvoice.Domain.dll
+C:\Users\Dell\source\repos\SmallInvoiceAPI01\SmallInvoice.Domain\obj\Debug\net8.0\SmallInvoice.Domain.pdb
+C:\Users\Dell\source\repos\SmallInvoiceAPI01\SmallInvoice.Domain\obj\Debug\net8.0\ref\SmallInvoice.Domain.dll

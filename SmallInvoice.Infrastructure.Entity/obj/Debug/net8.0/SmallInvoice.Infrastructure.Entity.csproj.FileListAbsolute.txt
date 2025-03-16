@@ -1,0 +1,17 @@
+C:\Users\Dell\source\repos\SmallInvoiceAPI01\SmallInvoice.Infrastructure.Entity\bin\Debug\net8.0\SmallInvoice.Infrastructure.Entity.deps.json
+C:\Users\Dell\source\repos\SmallInvoiceAPI01\SmallInvoice.Infrastructure.Entity\bin\Debug\net8.0\SmallInvoice.Infrastructure.Entity.dll
+C:\Users\Dell\source\repos\SmallInvoiceAPI01\SmallInvoice.Infrastructure.Entity\bin\Debug\net8.0\SmallInvoice.Infrastructure.Entity.pdb
+C:\Users\Dell\source\repos\SmallInvoiceAPI01\SmallInvoice.Infrastructure.Entity\bin\Debug\net8.0\SmallInvoice.Application.dll
+C:\Users\Dell\source\repos\SmallInvoiceAPI01\SmallInvoice.Infrastructure.Entity\bin\Debug\net8.0\SmallInvoice.Domain.dll
+C:\Users\Dell\source\repos\SmallInvoiceAPI01\SmallInvoice.Infrastructure.Entity\bin\Debug\net8.0\SmallInvoice.Domain.pdb
+C:\Users\Dell\source\repos\SmallInvoiceAPI01\SmallInvoice.Infrastructure.Entity\bin\Debug\net8.0\SmallInvoice.Application.pdb
+C:\Users\Dell\source\repos\SmallInvoiceAPI01\SmallInvoice.Infrastructure.Entity\obj\Debug\net8.0\SmallInvoice.Infrastructure.Entity.csproj.AssemblyReference.cache
+C:\Users\Dell\source\repos\SmallInvoiceAPI01\SmallInvoice.Infrastructure.Entity\obj\Debug\net8.0\SmallInvoice.Infrastructure.Entity.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Dell\source\repos\SmallInvoiceAPI01\SmallInvoice.Infrastructure.Entity\obj\Debug\net8.0\SmallInvoice.Infrastructure.Entity.AssemblyInfoInputs.cache
+C:\Users\Dell\source\repos\SmallInvoiceAPI01\SmallInvoice.Infrastructure.Entity\obj\Debug\net8.0\SmallInvoice.Infrastructure.Entity.AssemblyInfo.cs
+C:\Users\Dell\source\repos\SmallInvoiceAPI01\SmallInvoice.Infrastructure.Entity\obj\Debug\net8.0\SmallInvoice.Infrastructure.Entity.csproj.CoreCompileInputs.cache
+C:\Users\Dell\source\repos\SmallInvoiceAPI01\SmallInvoice.Infrastructure.Entity\obj\Debug\net8.0\SmallInv.DEFBC594.Up2Date
+C:\Users\Dell\source\repos\SmallInvoiceAPI01\SmallInvoice.Infrastructure.Entity\obj\Debug\net8.0\SmallInvoice.Infrastructure.Entity.dll
+C:\Users\Dell\source\repos\SmallInvoiceAPI01\SmallInvoice.Infrastructure.Entity\obj\Debug\net8.0\refint\SmallInvoice.Infrastructure.Entity.dll
+C:\Users\Dell\source\repos\SmallInvoiceAPI01\SmallInvoice.Infrastructure.Entity\obj\Debug\net8.0\SmallInvoice.Infrastructure.Entity.pdb
+C:\Users\Dell\source\repos\SmallInvoiceAPI01\SmallInvoice.Infrastructure.Entity\obj\Debug\net8.0\ref\SmallInvoice.Infrastructure.Entity.dll
