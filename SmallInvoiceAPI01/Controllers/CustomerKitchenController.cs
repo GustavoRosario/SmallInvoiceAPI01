@@ -9,12 +9,12 @@ namespace SmallInvoiceAPI01.Controllers
     [ApiController]
     public class CustomerKitchenController : Controller
     {
-        private ICustomerKitchenRepository customerKitchenRepository;
+        private ICustomerKitchenRepository _customerKitchenRepository;
         private static readonly ILog _logger = LogManager.GetLogger(typeof(CustomerKitchenController));
 
         public CustomerKitchenController(ICustomerKitchenRepository customerKitchenRepository)
         {
-            this.customerKitchenRepository = customerKitchenRepository;
+            _customerKitchenRepository = customerKitchenRepository;
         }
 
         [HttpPost]
@@ -47,7 +47,7 @@ namespace SmallInvoiceAPI01.Controllers
                 }
 
                 if (responseDto.IsSuccess)
-                    responseDto = await this.customerKitchenRepository.CreateCustomerKitchen(input);
+                    responseDto = await _customerKitchenRepository.CreateCustomerKitchen(input);
             }
             catch (Exception ex)
             {
@@ -72,7 +72,7 @@ namespace SmallInvoiceAPI01.Controllers
                 }
 
                 if (responseDto.IsSuccess)
-                    responseDto = await this.customerKitchenRepository.UpdateCustomerKitchen(input);
+                    responseDto = await _customerKitchenRepository.UpdateCustomerKitchen(input);
             }
             catch (Exception ex)
             {
@@ -90,7 +90,7 @@ namespace SmallInvoiceAPI01.Controllers
 
             try
             {
-                customerDto = await this.customerKitchenRepository.GetCustomerKitchen();
+                customerDto = await _customerKitchenRepository.GetCustomerKitchen();
             }
             catch (Exception ex)
             {
@@ -108,7 +108,7 @@ namespace SmallInvoiceAPI01.Controllers
 
             try
             {
-                customerDto = await this.customerKitchenRepository.GetCustomerKitchenByCustomerId(customerId);
+                customerDto = await _customerKitchenRepository.GetCustomerKitchenByCustomerId(customerId);
             }
             catch (Exception ex)
             {
@@ -126,7 +126,7 @@ namespace SmallInvoiceAPI01.Controllers
 
             try
             {
-                customerDto = await this.customerKitchenRepository.GetCustomerKitchenById(id);
+                customerDto = await _customerKitchenRepository.GetCustomerKitchenById(id);
             }
             catch (Exception ex)
             {
@@ -144,7 +144,7 @@ namespace SmallInvoiceAPI01.Controllers
 
             try
             {
-                responseDto = await this.customerKitchenRepository.DeleteCustomerKitchenById(id);
+                responseDto = await _customerKitchenRepository.DeleteCustomerKitchenById(id);
             }
             catch (Exception ex)
             {
