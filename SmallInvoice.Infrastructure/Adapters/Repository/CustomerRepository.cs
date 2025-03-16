@@ -104,7 +104,7 @@ namespace SmallInvoice.Infrastructure.Adapters.Repository
 
             return await Task.Run(() => lst);
         }
-        //Modificar esta parte del codigo.....
+        
         public async Task<CustomerDto> GetCustomerById(Guid id)
         {
             CustomerDto customerDto = null;
