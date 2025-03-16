@@ -10,13 +10,13 @@ namespace SmallInvoiceAPI01.Controllers
     public class PriceListRepositoryController : Controller
     {
         private IPriceListRepository _priceListRepository;
-        private ICustomerRepository customerRepository;
+        private ICustomerRepository _customerRepository;
         private static readonly ILog _logger = LogManager.GetLogger(typeof(CustomerController));
 
         public PriceListRepositoryController(IPriceListRepository priceListRepository, ICustomerRepository customerRepository)
         {
             _priceListRepository = priceListRepository;
-            this.customerRepository = customerRepository;
+            _customerRepository = customerRepository;
         }
 
         [HttpPost]
@@ -24,7 +24,7 @@ namespace SmallInvoiceAPI01.Controllers
         public async Task<PriceListResponseDto> CreatePriceList(List<CreatePriceListDto> input)
         {
             var responseDto = new PriceListResponseDto();
-            var customerName = customerRepository.GetCustomerNameById(input[0].CustomerId);
+            var customerName = _customerRepository.GetCustomerNameById(input[0].CustomerId);
 
             try
             {

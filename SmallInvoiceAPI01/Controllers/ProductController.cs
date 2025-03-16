@@ -9,12 +9,12 @@ namespace SmallInvoiceAPI01.Controllers
     [ApiController]
     public class ProductController : Controller
     {
-        private IProductRepository productRepository;
+        private IProductRepository _productRepository;
         private static readonly ILog _logger = LogManager.GetLogger(typeof(ProductController));
 
         public ProductController(IProductRepository productRepository)
         {
-            this.productRepository = productRepository;
+            _productRepository = productRepository;
         }
 
         [HttpPost]
@@ -26,7 +26,7 @@ namespace SmallInvoiceAPI01.Controllers
 
             try
             {
-                productExits = await this.productRepository.ProductExits(input.ProductName);
+                productExits = await _productRepository.ProductExits(input.ProductName);
 
                 //if (input.ProductName.Trim().IsNullOrEmpty())
                 if (string.IsNullOrEmpty(input.ProductName.Trim()))
@@ -48,7 +48,7 @@ namespace SmallInvoiceAPI01.Controllers
                 }
 
                 if (responseDto.IsSuccess)
-                    responseDto = this.productRepository.CreateProduct(input).Result;
+                    responseDto = _productRepository.CreateProduct(input).Result;
             }
             catch (Exception ex)
             {
@@ -67,7 +67,7 @@ namespace SmallInvoiceAPI01.Controllers
 
             try
             {
-                productExits = await this.productRepository.ProductExits(input.ProductName);
+                productExits = await _productRepository.ProductExits(input.ProductName);
 
                 if (string.IsNullOrEmpty(input.ProductName.Trim()))
                 {
@@ -88,7 +88,7 @@ namespace SmallInvoiceAPI01.Controllers
                 }
 
                 if (responseDto.IsSuccess)
-                    responseDto = await this.productRepository.UpdateProduct(input);
+                    responseDto = await _productRepository.UpdateProduct(input);
             }
             catch (Exception ex)
             {
@@ -107,7 +107,7 @@ namespace SmallInvoiceAPI01.Controllers
 
             try
             {
-                productDto = await this.productRepository.GetProduct();
+                productDto = await _productRepository.GetProduct();
             }
             catch (Exception ex)
             {
@@ -125,7 +125,7 @@ namespace SmallInvoiceAPI01.Controllers
 
             try
             {
-                productDto = await this.productRepository.GetProductById(id);
+                productDto = await _productRepository.GetProductById(id);
             }
             catch (Exception ex)
             {
@@ -143,7 +143,7 @@ namespace SmallInvoiceAPI01.Controllers
 
             try
             {
-                responseDto = await this.productRepository.DeleteProductById(id);
+                responseDto = await _productRepository.DeleteProductById(id);
             }
             catch (Exception ex)
             {
