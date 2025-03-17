@@ -5,7 +5,7 @@ namespace SmallInvoice.Domain.Ports.Repository
     public interface IProductRepository
     {
         public Task<ProductResponseDto> CreateProduct(ProductDto input);
-        public Task<ProductResponseDto> UpdateProduct(ProductDto input);
+        public Task<ProductResponseDto> UpdateProduct(UpdateProductDto input);
 
         /// <summary>
         /// Retrieve all data of products.
