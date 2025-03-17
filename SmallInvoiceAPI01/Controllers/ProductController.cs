@@ -7,9 +7,10 @@ using SmallInvoiceAPI01.Constats;
 namespace SmallInvoiceAPI01.Controllers
 {
     [ApiController]
+    [Route(Prefix.API_ROUT + "Product")]
     public class ProductController : Controller
     {
-        private IProductRepository _productRepository;
+        private readonly IProductRepository _productRepository;
         private static readonly ILog _logger = LogManager.GetLogger(typeof(ProductController));
 
         public ProductController(IProductRepository productRepository)
@@ -17,8 +18,7 @@ namespace SmallInvoiceAPI01.Controllers
             _productRepository = productRepository;
         }
 
-        [HttpPost]
-        [Route(Prefix.API_ROUT + "CreateProduct")]
+        [HttpPost("Create")]
         public async Task<ProductResponseDto> CreateProduct(ProductDto input)
         {
             bool productExits = false;
@@ -48,7 +48,7 @@ namespace SmallInvoiceAPI01.Controllers
                 }
 
                 if (responseDto.IsSuccess)
-                    responseDto = _productRepository.CreateProduct(input).Result;
+                    responseDto = await _productRepository.CreateProduct(input);
             }
             catch (Exception ex)
             {
@@ -58,12 +58,11 @@ namespace SmallInvoiceAPI01.Controllers
             return await Task.Run(() => responseDto);
         }
 
-        [HttpPost]
-        [Route(Prefix.API_ROUT + "UpdateProduct")]
+        [HttpPost("Update")]
         public async Task<ProductResponseDto> UpdateProduct(UpdateProductDto input)
         {
             bool productExits = false;
-            var responseDto = new ProductResponseDto() { IsSuccess = true};
+            var responseDto = new ProductResponseDto() { IsSuccess = true };
 
             try
             {
@@ -100,8 +99,7 @@ namespace SmallInvoiceAPI01.Controllers
             return await Task.Run(() => responseDto);
         }
 
-        [HttpGet]
-        [Route(Prefix.API_ROUT + "GetProduct")]
+        [HttpGet("GetAll")]
         public async Task<List<ProductDto>> GetProduct()
         {
 
@@ -119,8 +117,7 @@ namespace SmallInvoiceAPI01.Controllers
             return await Task.Run(() => productDto);
         }
 
-        [HttpGet]
-        [Route(Prefix.API_ROUT + "GetProductById")]
+        [HttpGet("GetById/{id}")]
         public async Task<ProductDto> GetProductById(Guid id)
         {
             ProductDto productDto = new ProductDto();
@@ -137,8 +134,7 @@ namespace SmallInvoiceAPI01.Controllers
             return await Task.Run(() => productDto);
         }
 
-        [HttpPost]
-        [Route(Prefix.API_ROUT + "DeleteProductById")]
+        [HttpPost("Delete/{id}")]
         public async Task<ProductResponseDto> DeleteProductById(Guid id)
         {
             var responseDto = new ProductResponseDto();
