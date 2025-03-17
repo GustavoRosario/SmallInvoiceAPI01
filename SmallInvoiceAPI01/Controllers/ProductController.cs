@@ -60,10 +60,10 @@ namespace SmallInvoiceAPI01.Controllers
 
         [HttpPost]
         [Route(Prefix.API_ROUT + "UpdateProduct")]
-        public async Task<ProductResponseDto> UpdateProduct(ProductDto input)
+        public async Task<ProductResponseDto> UpdateProduct(UpdateProductDto input)
         {
             bool productExits = false;
-            var responseDto = new ProductResponseDto();
+            var responseDto = new ProductResponseDto() { IsSuccess = true};
 
             try
             {
@@ -81,11 +81,13 @@ namespace SmallInvoiceAPI01.Controllers
                     responseDto.Message = $"Ya existe un producto con el nombre [{input.ProductName}]";
                 }
 
+                /*
                 if (input.ProcessModeId == 0)
                 {
                     responseDto.Message = $"El Id del modo de proceso no puede ser cero.";
                     responseDto.IsSuccess = false;
                 }
+                */
 
                 if (responseDto.IsSuccess)
                     responseDto = await _productRepository.UpdateProduct(input);

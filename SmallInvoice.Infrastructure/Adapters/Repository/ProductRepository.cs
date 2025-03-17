@@ -51,28 +51,30 @@ namespace SmallInvoice.Infrastructure.Adapters.Repository
             return await Task.Run(() => responseDto);
         }
 
-        public async Task<ProductResponseDto> UpdateProduct(ProductDto input)
+        public async Task<ProductResponseDto> UpdateProduct(UpdateProductDto input)
         {
             var responseDto = new ProductResponseDto();
             var productDto = new ProductDto();
 
-            var producType = Context.SvProductType.Where(i => i.RefId == input.RefId && i.Active == true).FirstOrDefault();
+            var product = Context.SvProduct.Where(i => i.RefId == input.RefId && i.Active == true).FirstOrDefault();
 
-            if (producType != null)
+            if (product != null)
             {
-                producType.ProductTypeName = input.ProductName.ToUpper();
+                product.ProductName = input.ProductName.ToUpper();
+                product.ProductTypeId = input.ProductTypeId;
 
                 AffectedRecords = Context.SaveChanges();
             }
 
             if (AffectedRecords > 0)
             {
-                responseDto.IsSuccess = true;
-                /*responseDto.Date = DateTime.Now.ToShortDateString();
-                responseDto.Time = DateTime.Now.ToShortDateString();*/
-                productDto.RefId = producType.RefId;
+                productDto.RefId = product.RefId;
+                productDto.ProductId = product.ProductId;
                 productDto.ProductName = input.ProductName.ToUpper();
+                productDto.ProductTypeId = input.ProductTypeId;
+                productDto.ProcessModeId = product.ProcessModeId;
                 productDto.Active = true;
+                responseDto.IsSuccess = true;
                 responseDto.Product = productDto;
                 responseDto.Message = $"El producto {input.ProductName} ha sido actualizado.";
                 AffectedRecords = 0;
