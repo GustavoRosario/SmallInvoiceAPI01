@@ -1,4 +1,5 @@
-﻿using SmallInvoice.Application.Dto;
+﻿using Microsoft.EntityFrameworkCore;
+using SmallInvoice.Application.Dto;
 using SmallInvoice.Domain.Entities;
 using SmallInvoice.Domain.Ports.Repository;
 using SmallInvoice.Infrastructure.Entity.Data;
@@ -14,73 +15,80 @@ namespace SmallInvoice.Infrastructure.Adapters.Repository
 
         public async Task<ProductResponseDto> CreateProduct(ProductDto input)
         {
-            var responseDto = new ProductResponseDto();
-            var svproduct = Context.Set<SvProduct>();
             var refId = Guid.NewGuid();
-            var ProductDto = new ProductDto();
+            var svproduct = Context.SvProduct;
+            var productName = input.ProductName.ToUpper();
+
+            bool productExits = await Context.SvProduct.AnyAsync(x => x.ProductName == productName && x.Active == true);
+
+            if (productExits)
+                return new ProductResponseDto() { IsSuccess = false, Message = $"Ya existe un producto con el nombre [{productName}]" };
 
             svproduct.Add(new SvProduct
             {
                 RefId = refId,
                 ProductTypeId = input.ProductTypeId,
-                ProductName = input.ProductName.ToUpper(),
-                //Price = input.Price,
+                ProductName = productName,
                 ProcessModeId = input.ProcessModeId,
                 Active = true
             }
             );
 
-            AffectedRecords = await Context.SaveChangesAsync();
-
-            if (AffectedRecords > 0)
+            if (await Context.SaveChangesAsync() > 0)
             {
-                responseDto.IsSuccess = true;
-                /*responseDto.Date = DateTime.Now.ToShortDateString();
-                responseDto.Time = DateTime.Now.ToShortDateString();*/
-                ProductDto.RefId = refId;
-                ProductDto.ProductTypeId = input.ProductTypeId;
-                ProductDto.ProductName = input.ProductName.ToUpper();
-                //ProductDto.Price = input.Price;
-                ProductDto.ProcessModeId = input.ProcessModeId;
-                ProductDto.Active = true;
-                responseDto.Product = ProductDto;
-                responseDto.Message = $"El producto {input.ProductName} ha sido registrado.";
-                AffectedRecords = 0;
+                return new ProductResponseDto()
+                {
+                    Product = new ProductDto()
+                    {
+                        RefId = refId,
+                        ProductTypeId = input.ProductTypeId,
+                        ProductName = productName,
+                        ProcessModeId = input.ProcessModeId,
+                        Active = true
+                    },
+                    IsSuccess = true,
+                    Message = $"El producto {input.ProductName} ha sido registrado."
+                };
             }
 
-            return await Task.Run(() => responseDto);
+            return new ProductResponseDto() { IsSuccess = false, Message = "No se ha podido registrar el producto." };
         }
 
         public async Task<ProductResponseDto> UpdateProduct(UpdateProductDto input)
         {
-            var responseDto = new ProductResponseDto();
-            var productDto = new ProductDto();
-
+            string productName = input.ProductName.ToUpper();
             var product = Context.SvProduct.Where(i => i.RefId == input.RefId && i.Active == true).FirstOrDefault();
 
-            if (product != null)
-            {
-                product.ProductName = input.ProductName.ToUpper();
-                product.ProductTypeId = input.ProductTypeId;
+            if (product == null)
+                return new ProductResponseDto() { IsSuccess = false, Message = $"No existe el producto con ID {input.RefId}" };
 
-                AffectedRecords = Context.SaveChanges();
+            bool productExits = await Context.SvProduct.AnyAsync(x => x.ProductName == productName && x.Active == true);
+
+            if (productExits)
+                return new ProductResponseDto() { IsSuccess = false, Message = $"Ya existe un producto con el nombre [{productName}]" };
+
+            product.ProductName = productName;
+            product.ProductTypeId = input.ProductTypeId;
+
+            if (await Context.SaveChangesAsync() > 0)
+            {
+                return new ProductResponseDto()
+                {
+                    Product = new ProductDto()
+                    {
+                        RefId = product.RefId,
+                        ProductId = product.ProductId,
+                        ProductName = productName,
+                        ProductTypeId = input.ProductTypeId,
+                        ProcessModeId = product.ProcessModeId,
+                        Active = true
+                    },
+                    IsSuccess = true,
+                    Message = $"El producto {productName} ha sido actualizado."
+                };
             }
 
-            if (AffectedRecords > 0)
-            {
-                productDto.RefId = product.RefId;
-                productDto.ProductId = product.ProductId;
-                productDto.ProductName = input.ProductName.ToUpper();
-                productDto.ProductTypeId = input.ProductTypeId;
-                productDto.ProcessModeId = product.ProcessModeId;
-                productDto.Active = true;
-                responseDto.IsSuccess = true;
-                responseDto.Product = productDto;
-                responseDto.Message = $"El producto {input.ProductName} ha sido actualizado.";
-                AffectedRecords = 0;
-            }
-
-            return await Task.Run(() => responseDto);
+            return new ProductResponseDto() { IsSuccess = false, Message = "No se ha podido actualizar el producto." };
         }
 
         public async Task<List<ProductDto>> GetProduct()
@@ -109,33 +117,26 @@ namespace SmallInvoice.Infrastructure.Adapters.Repository
             var product = Context.SvProduct.Where(x => x.RefId == id && x.Active == true).FirstOrDefault();
 
             if (product == null)
+                return productDto;
+            else
             {
-                productDto = new ProductDto();
-                return await Task.Run(() => productDto);
+                productDto = new ProductDto()
+                {
+                    ProductId = product.ProductId,
+                    RefId = product.RefId,
+                    ProductTypeId = product.ProductTypeId,
+                    ProductName = product.ProductName,
+                    ProcessModeId = product.ProcessModeId,
+                    Active = product.Active
+                };
+
+                return productDto;
             }
-
-            productDto = new ProductDto()
-            {
-                ProductId = product.ProductId,
-                RefId = product.RefId,
-                ProductTypeId = product.ProductTypeId,
-                ProductName = product.ProductName,
-                ProcessModeId = product.ProcessModeId,
-                Active = product.Active
-            };
-
-            return await Task.Run(() => productDto);
         }
 
         public async Task<bool> ProductExits(string productName)
         {
-            bool response = false;
-            var product = Context.SvProduct.Where(x => x.ProductName == productName && x.Active == true).FirstOrDefault();
-
-            if (product != null)
-                response = true;
-
-            return await Task.Run(() => response);
+            return await Context.SvProduct.AnyAsync(x => x.ProductName == productName && x.Active == true);
         }
 
         public async Task<ProductResponseDto> DeleteProductById(Guid Id)
