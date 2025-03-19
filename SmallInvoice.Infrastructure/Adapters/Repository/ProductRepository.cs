@@ -141,33 +141,32 @@ namespace SmallInvoice.Infrastructure.Adapters.Repository
 
         public async Task<ProductResponseDto> DeleteProductById(Guid Id)
         {
-            var responseDto = new ProductResponseDto();
-            var productDto = new ProductDto();
-
             var product = Context.SvProduct.Where(i => i.RefId == Id && i.Active == true).FirstOrDefault();
 
-            if (product != null)
-            {
+            if (product == null)
+                return new ProductResponseDto() { IsSuccess = false, Message = $"El producto ID {Id} que ha indicado no existe." };
+            else
                 product.Active = false;
-                AffectedRecords = Context.SaveChanges();
-            }
 
-            if (AffectedRecords > 0)
+            if (await Context.SaveChangesAsync() > 0)
             {
-
-                productDto.RefId = Id;
-                productDto.ProductId = product.ProductId;
-                productDto.ProductTypeId = product.ProductTypeId;
-                productDto.ProductName = product.ProductName.ToUpper();
-                productDto.ProcessModeId = product.ProcessModeId;
-                productDto.Active = false;
-                responseDto.IsSuccess = true;
-                responseDto.Product = productDto;
-                responseDto.Message = $"El tipo de producto {product.ProductName} ha sido eliminado.";
-                AffectedRecords = 0;
+                return new ProductResponseDto()
+                {
+                    Product = new ProductDto()
+                    {
+                        RefId = product.RefId,
+                        ProductId = product.ProductId,
+                        ProductName = product.ProductName,
+                        ProductTypeId = product.ProductTypeId,
+                        ProcessModeId = product.ProcessModeId,
+                        Active = true
+                    },
+                    IsSuccess = true,
+                    Message = $"El producto {product.ProductName} ha sido eliminado."
+                };
             }
 
-            return await Task.Run(() => responseDto);
+            return new ProductResponseDto() { IsSuccess = false, Message = "No se ha podido eliminar el producto." }; ;
         }
     }
 }
