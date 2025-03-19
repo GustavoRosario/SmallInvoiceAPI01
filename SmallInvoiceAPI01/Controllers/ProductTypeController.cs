@@ -8,9 +8,10 @@ using SmallInvoiceAPI01.Constats;
 namespace SmallInvoiceAPI01.Controllers
 {
     [ApiController]
+    [Route(Prefix.API_ROUT + "ProductType")]
     public class ProductTypeController : Controller
     {
-        private IProductTypeRepository _productTypeRepository;
+        private readonly IProductTypeRepository _productTypeRepository;
         private static readonly ILog _logger = LogManager.GetLogger(typeof(ProductController));
 
         public ProductTypeController(IProductTypeRepository productTypeRepository)
@@ -18,66 +19,67 @@ namespace SmallInvoiceAPI01.Controllers
             _productTypeRepository = productTypeRepository;
         }
 
-        [HttpPost]
-        [Route(Prefix.API_ROUT + "CreateProductType")]
-        public async Task<ProductTypeResponseDto> CreateProductType(string productTypeName, int processModeId)
+        [HttpPost("Create")]
+        public async Task<ActionResult<ProductTypeResponseDto>> CreateProductType(string productTypeName, int processModeId)
         {
-            bool productTypeExits = false;
-            var responseDto = new ProductTypeResponseDto() { IsSuccess = true };
-
             try
             {
-                productTypeExits = await _productTypeRepository.ProductTypeExits(productTypeName);
-
                 if (productTypeName.Trim().IsNullOrEmpty())
-                {
-                    responseDto.IsSuccess = false;
-                    responseDto.Message = $"Debe indicar el nombre del tipo de producto.";
-                }
+                    return BadRequest(new ProductTypeResponseDto { IsSuccess = false, Message = "Debe indicar el nombre del tipo de producto." });
 
                 if (processModeId == 0)
-                {
-                    responseDto.IsSuccess = false;
-                    responseDto.Message = $"El processModeId no puede ser cero.";
-                }
+                    return BadRequest(new ProductTypeResponseDto { IsSuccess = false, Message = "El processModeId no puede ser cero." });
 
-                if (productTypeExits)
-                {
-                    responseDto.IsSuccess = false;
-                    responseDto.Message = $"Ya existe un tipo de producto con el nombre [{productTypeName}]";
-                }
+                var responseDto = await _productTypeRepository.CreateProductType(productTypeName, processModeId);
 
                 if (responseDto.IsSuccess)
-                    responseDto = await _productTypeRepository.CreateProductType(productTypeName, processModeId);
+                    return Ok(responseDto);
+                else
+                    return BadRequest(responseDto);
             }
             catch (Exception ex)
             {
-                _logger.Error("Error has been in CreateProductType method : " + ex.Message);
-            }
+                _logger.Error($"Error has been in CreateProductType method : {ex}");
 
-            return await Task.Run(() => responseDto);
+                return StatusCode(500, new ProductTypeResponseDto
+                {
+                    IsSuccess = false,
+                    Message = $"Error : {ex}"
+                });
+            }
         }
 
-        [HttpPost]
-        [Route(Prefix.API_ROUT + "UpdateProductType")]
-        public async Task<ProductTypeResponseDto> UpdateProductType(ProductTypeDto input)
+        [HttpPost("Update")]
+        public async Task<ActionResult<ProductTypeResponseDto>> UpdateProductType(ProductTypeDto input)
         {
-            var responseDto = new ProductTypeResponseDto();
-
             try
             {
-                responseDto = await _productTypeRepository.UpdateProductType(input);
+                if (input == null)
+                    return BadRequest(new ProductTypeResponseDto { IsSuccess = false, Message = "Los datos de entrada no deben ser nulos." });
+
+                if (input.RefId == Guid.Empty)
+                    return BadRequest(new ProductTypeResponseDto { IsSuccess = false, Message = "El ID del tipo de producto no es valido." });
+
+                var responseDto = await _productTypeRepository.UpdateProductType(input);
+
+                if (responseDto.IsSuccess)
+                    return Ok(responseDto);
+                else
+                    return BadRequest(responseDto);
             }
             catch (Exception ex)
             {
                 _logger.Error("Error has been in UpdateProductType method : " + ex.Message);
-            }
 
-            return await Task.Run(() => responseDto);
+                return StatusCode(500, new ProductTypeResponseDto
+                {
+                    IsSuccess = false,
+                    Message = $"Error : {ex}"
+                });
+            }
         }
 
-        [HttpGet]
-        [Route(Prefix.API_ROUT + "GetProductType")]
+        [HttpGet("GetAll")]
         public async Task<List<ProductTypeDto>> GetProductType()
         {
 
@@ -95,8 +97,7 @@ namespace SmallInvoiceAPI01.Controllers
             return await Task.Run(() => productTypeDto);
         }
 
-        [HttpGet]
-        [Route(Prefix.API_ROUT + "GetProductTypeById")]
+        [HttpGet("GetById/{id}")]
         public async Task<ProductTypeDto> GetProductTypeById(Guid id)
         {
 
@@ -114,8 +115,7 @@ namespace SmallInvoiceAPI01.Controllers
             return await Task.Run(() => productTypeDto);
         }
 
-        [HttpPost]
-        [Route(Prefix.API_ROUT + "DeleteProductTypeById")]
+        [HttpPost("DeleteById")]
         public async Task<ProductTypeResponseDto> DeleteProductTypeById(Guid Id)
         {
             var responseDto = new ProductTypeResponseDto();

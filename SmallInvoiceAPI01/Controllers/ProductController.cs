@@ -63,7 +63,7 @@ namespace SmallInvoiceAPI01.Controllers
                     return BadRequest(new ProductResponseDto { IsSuccess = false, Message = "Los datos de entrada no deben ser nulos." });
 
                 if (input.RefId == Guid.Empty)
-                    return BadRequest(new ProductResponseDto { IsSuccess = false, Message = "EL ID del producto no es valido." });
+                    return BadRequest(new ProductResponseDto { IsSuccess = false, Message = "El ID del producto no es valido." });
 
                 if (string.IsNullOrEmpty(input.ProductName.Trim()))
                     return BadRequest(new ProductResponseDto { IsSuccess = false, Message = "Debe indicar el nombre del producto." });
