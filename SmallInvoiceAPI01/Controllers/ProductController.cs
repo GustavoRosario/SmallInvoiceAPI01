@@ -49,7 +49,7 @@ namespace SmallInvoiceAPI01.Controllers
                 return StatusCode(500, new ProductResponseDto
                 {
                     IsSuccess = false,
-                    Message = "Error : " + ex.Message
+                    Message = $"Error : {ex}"
                 });
             }
         }
@@ -61,6 +61,9 @@ namespace SmallInvoiceAPI01.Controllers
             {
                 if (input == null)
                     return BadRequest(new ProductResponseDto { IsSuccess = false, Message = "Los datos de entrada no deben ser nulos." });
+
+                if (input.RefId == Guid.Empty)
+                    return BadRequest(new ProductResponseDto { IsSuccess = false, Message = "EL ID del producto no es valido." });
 
                 if (string.IsNullOrEmpty(input.ProductName.Trim()))
                     return BadRequest(new ProductResponseDto { IsSuccess = false, Message = "Debe indicar el nombre del producto." });
@@ -83,7 +86,7 @@ namespace SmallInvoiceAPI01.Controllers
                 return StatusCode(500, new ProductResponseDto
                 {
                     IsSuccess = false,
-                    Message = "Error : " + ex.Message
+                    Message = $"Error : {ex}"
                 });
             }
         }
@@ -99,9 +102,9 @@ namespace SmallInvoiceAPI01.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Error("Error has been in GetProduct method : " + ex.Message);
+                _logger.Error($"Error has been in GetProduct method : {ex}");
 
-                return StatusCode(500, "Error : " + ex.Message);
+                return StatusCode(500, $"Error : {ex}");
             }
         }
 
@@ -110,40 +113,45 @@ namespace SmallInvoiceAPI01.Controllers
         {
             try
             {
+                if (id == Guid.Empty)
+                    return BadRequest("EL ID del producto no es valido.");
+
                 var productDto = await _productRepository.GetProductById(id);
 
                 if (productDto == null)
-                    return NotFound($"El produto con el ID {id} no puede ser encontrado.");
-                else
-                    return Ok(productDto);
+                    return NotFound($"No se encontro el producto con ID {id}.");
+
+                return Ok(productDto);
             }
             catch (Exception ex)
             {
-                _logger.Error("Error has been in GetProductById method : " + ex.Message);
+                _logger.Error($"Error has been in GetProductById method : {ex}");
 
-                return StatusCode(500, "Error : " + ex.Message);
+                return StatusCode(500, $"Error : {ex}");
             }
         }
 
-        [HttpPost("Delete/{id}")]
+        [HttpPost("DeleteById/{id}")]
         public async Task<ActionResult<ProductResponseDto>> DeleteProductById(Guid id)
         {
             try
             {
+                if (id == Guid.Empty)
+                    return BadRequest("EL ID del producto no es valido.");
+
                 var responseDto = await _productRepository.DeleteProductById(id);
 
-                if (responseDto == null)
-                    return NotFound($"No se ha podido eliminar el producto ID {id}");
-                else
+                if (responseDto.IsSuccess)
                     return Ok(responseDto);
+                else
+                    return NotFound(responseDto);
             }
             catch (Exception ex)
             {
-                _logger.Error("Error has been in DeleteProductById method : " + ex.Message);
+                _logger.Error($"Error has been in DeleteProductById method : {ex}");
 
-                return StatusCode(500, "Error : " + ex.Message);
+                return StatusCode(500, $"Error : {ex}");
             }
         }
     }
 }
-
