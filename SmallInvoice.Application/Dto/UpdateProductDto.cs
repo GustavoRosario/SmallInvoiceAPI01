@@ -5,6 +5,6 @@ namespace SmallInvoice.Application.Dto
     {
         public Guid? RefId { get; set; } = default(Guid?);
         public int ProductTypeId { get; set; }
-        public string? ProductName { get; set; }
+        public string ProductName { get; set; }
     }
 }
