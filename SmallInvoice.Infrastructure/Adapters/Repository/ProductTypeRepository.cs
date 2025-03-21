@@ -1,9 +1,8 @@
 ﻿using SmallInvoice.Domain.Ports.Repository;
 using SmallInvoice.Application.Dto;
 using SmallInvoice.Infrastructure.Entity.Data;
-//using SmallInvoice.Infrastructure.Adapters.Repository;
 using SmallInvoice.Domain.Entities;
-using System.Xml.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace SmallInvoice.Infrastructure.Adapters.Repository
 {
@@ -16,62 +15,76 @@ namespace SmallInvoice.Infrastructure.Adapters.Repository
 
         public async Task<ProductTypeResponseDto> CreateProductType(string name, int processModeId)
         {
-            var responseDto = new ProductTypeResponseDto();
-            var svproductType = Context.Set<SvProductType>();
+            var svproductType = Context.SvProductType;
             var refId = Guid.NewGuid();
-            var ProductTypeDto = new ProductTypeDto();
+
+            bool productTypeExits = await Context.SvProductType.AnyAsync(x => x.ProductTypeName == name && x.Active == true);
+
+            if (productTypeExits)
+                return new ProductTypeResponseDto() { IsSuccess = false, Message = $"Ya existe un tipo de producto con el nombre [{name}]" };
 
             svproductType.Add(new SvProductType
             {
-                ProductTypeName = name.ToUpper(),
                 RefId = refId,
+                ProductTypeName = name.ToUpper(),
                 ProcessModeId = processModeId,
                 Active = true
             }
             );
 
-            AffectedRecords = await Context.SaveChangesAsync();
-
-            if (AffectedRecords > 0)
+            if (await Context.SaveChangesAsync() > 0)
             {
-                responseDto.IsSuccess = true;
-                ProductTypeDto.RefId = refId;
-                ProductTypeDto.ProductTypeName = name.ToUpper();
-                ProductTypeDto.Active = true;
-                responseDto.ProductType = ProductTypeDto;
-                responseDto.Message = $"El tipo de producto {name} ha sido registrado.";
-                AffectedRecords = 0;
+                return new ProductTypeResponseDto()
+                {
+                    ProductType = new ProductTypeDto()
+                    {
+                        RefId = refId,
+                        ProductTypeName = name,
+                        Active = true
+                    },
+                    IsSuccess = true,
+                    Message = $"El tipo de producto {name} ha sido registrado."
+                };
             }
 
-            return await Task.Run(() => responseDto);
+            return new ProductTypeResponseDto() { IsSuccess = false, Message = "No se ha podido registrar el tipo de producto." };
         }
 
         public async Task<ProductTypeResponseDto> UpdateProductType(ProductTypeDto input)
         {
-            var responseDto = new ProductTypeResponseDto();
-            var productTypeDto = new ProductTypeDto();
-            //Guid refId = Guid.NewGuid()
+            string productName = input.ProductTypeName.ToUpper();
+            var product = Context.SvProductType.Where(i => i.RefId == input.RefId && i.Active == true).FirstOrDefault();
 
-            var producType = Context.SvProductType.Where(i => i.RefId == input.RefId && i.Active == true).FirstOrDefault();
+            if (product == null)
+                return new ProductTypeResponseDto() { IsSuccess = false, Message = $"No existe el tipo de producto con ID {input.RefId}" };
 
-            if (producType != null)
+            bool productExits = await Context.SvProductType.AnyAsync(x => x.ProductTypeName == productName && x.Active == true);
+
+            if (productExits)
+                return new ProductTypeResponseDto() { IsSuccess = false, Message = $"Ya existe un tipo de producto con el nombre [{productName}]" };
+
+            product.ProductTypeName = productName;
+            product.ProductTypeId = input.ProductTypeId;
+
+            if (await Context.SaveChangesAsync() > 0)
             {
-                producType.ProductTypeName = input.ProductTypeName.ToUpper();
-                AffectedRecords = Context.SaveChanges();
+                return new ProductTypeResponseDto()
+                {
+                    ProductType = new ProductTypeDto()
+                    {
+                        RefId = product.RefId,
+                        ProductTypeId = product.ProductTypeId,
+                        ProductTypeName = productName,
+                        /*ProductTypeId = input.ProductTypeId,
+                        ProcessModeId = product.ProcessModeId,*/
+                        Active = true
+                    },
+                    IsSuccess = true,
+                    Message = $"El tipo de producto {productName} ha sido actualizado."
+                };
             }
 
-            if (AffectedRecords > 0)
-            {
-                responseDto.IsSuccess = true;
-                productTypeDto.RefId = producType.RefId;
-                productTypeDto.ProductTypeName = input.ProductTypeName.ToUpper();
-                productTypeDto.Active = true;
-                responseDto.ProductType = productTypeDto;
-                responseDto.Message = $"El tipo de producto {input.ProductTypeName} ha sido actualizado.";
-                AffectedRecords = 0;
-            }
-
-            return await Task.Run(() => responseDto);
+            return new ProductTypeResponseDto() { IsSuccess = false, Message = "No se ha podido actualizar el tipo de producto." };
         }
 
         public async Task<List<ProductTypeDto>> GetProductTypes()
@@ -98,10 +111,7 @@ namespace SmallInvoice.Infrastructure.Adapters.Repository
             var productType = Context.SvProductType.Where(x => x.RefId == id && x.Active == true).FirstOrDefault();
 
             if (productType == null)
-            {
-                productTypeDto = new ProductTypeDto();
-                return await Task.Run(() => productTypeDto);
-            }
+                return productTypeDto;
 
             productTypeDto = new ProductTypeDto()
             {
@@ -111,7 +121,7 @@ namespace SmallInvoice.Infrastructure.Adapters.Repository
                 Active = productType.Active
             };
 
-            return await Task.Run(() => productTypeDto);
+            return productTypeDto;
         }
 
         public async Task<bool> ProductTypeExits(string productTypeName)
@@ -127,29 +137,32 @@ namespace SmallInvoice.Infrastructure.Adapters.Repository
 
         public async Task<ProductTypeResponseDto> DeleteProductTypeById(Guid Id)
         {
-            var responseDto = new ProductTypeResponseDto();
-            var productTypeDto = new ProductTypeDto();
+            var product = Context.SvProductType.Where(i => i.RefId == Id && i.Active == true).FirstOrDefault();
 
-            var producType = Context.SvProductType.Where(i => i.RefId == Id && i.Active == true).FirstOrDefault();
+            if (product == null)
+                return new ProductTypeResponseDto() { IsSuccess = false, Message = $"El tipo de producto ID {Id} que ha indicado no existe." };
+            else
+                product.Active = false;
 
-            if (producType != null)
+            if (await Context.SaveChangesAsync() > 0)
             {
-                producType.Active = false;
-                AffectedRecords = Context.SaveChanges();
+                return new ProductTypeResponseDto()
+                {
+                    ProductType = new ProductTypeDto()
+                    {
+                        RefId = product.RefId,
+                        ProductTypeId = product.ProductTypeId,
+                        ProductTypeName = product.ProductTypeName,
+                        //ProductTypeId = product.ProductTypeId,
+                        //ProcessModeId = product.ProcessModeId,
+                        Active = true
+                    },
+                    IsSuccess = true,
+                    Message = $"El tipo de producto {product.ProductTypeName} ha sido eliminado."
+                };
             }
 
-            if (AffectedRecords > 0)
-            {
-                responseDto.IsSuccess = true;
-                productTypeDto.RefId = Id;
-                productTypeDto.ProductTypeName = producType.ProductTypeName.ToUpper();
-                productTypeDto.Active = false;
-                responseDto.ProductType = productTypeDto;
-                responseDto.Message = $"El tipo de producto {producType.ProductTypeName} ha sido eliminado.";
-                AffectedRecords = 0;
-            }
-
-            return await Task.Run(() => responseDto);
+            return new ProductTypeResponseDto() { IsSuccess = false, Message = "No se ha podido eliminar el tipo de producto." };
         }
     }
 }

@@ -63,7 +63,7 @@ namespace SmallInvoiceAPI01.Controllers
                     return BadRequest(new ProductResponseDto { IsSuccess = false, Message = "Los datos de entrada no deben ser nulos." });
 
                 if (input.RefId == Guid.Empty)
-                    return BadRequest(new ProductResponseDto { IsSuccess = false, Message = "EL ID del producto no es valido." });
+                    return BadRequest(new ProductResponseDto { IsSuccess = false, Message = "El ID del producto no es valido." });
 
                 if (string.IsNullOrEmpty(input.ProductName.Trim()))
                     return BadRequest(new ProductResponseDto { IsSuccess = false, Message = "Debe indicar el nombre del producto." });
@@ -114,7 +114,7 @@ namespace SmallInvoiceAPI01.Controllers
             try
             {
                 if (id == Guid.Empty)
-                    return BadRequest("EL ID del producto no es valido.");
+                    return BadRequest("El ID del producto no es valido.");
 
                 var productDto = await _productRepository.GetProductById(id);
 
@@ -137,7 +137,7 @@ namespace SmallInvoiceAPI01.Controllers
             try
             {
                 if (id == Guid.Empty)
-                    return BadRequest("EL ID del producto no es valido.");
+                    return BadRequest("El ID del producto no es valido.");
 
                 var responseDto = await _productRepository.DeleteProductById(id);
 

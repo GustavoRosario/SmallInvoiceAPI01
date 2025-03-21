@@ -9,6 +9,6 @@ namespace SmallInvoice.Domain.Ports.Repository
         public Task<List<ProductTypeDto>> GetProductTypes();
         public Task<ProductTypeDto> GetProductTypeById(Guid id);
         public Task<bool> ProductTypeExits(string productTypeName);
-        public Task<ProductTypeResponseDto> DeleteProductTypeById(Guid Id);
+        public Task<ProductTypeResponseDto> DeleteProductTypeById(Guid id);
     }
 }
