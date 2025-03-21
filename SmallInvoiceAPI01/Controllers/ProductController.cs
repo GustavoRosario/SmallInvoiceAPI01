@@ -114,7 +114,7 @@ namespace SmallInvoiceAPI01.Controllers
             try
             {
                 if (id == Guid.Empty)
-                    return BadRequest("EL ID del producto no es valido.");
+                    return BadRequest("El ID del producto no es valido.");
 
                 var productDto = await _productRepository.GetProductById(id);
 
@@ -137,7 +137,7 @@ namespace SmallInvoiceAPI01.Controllers
             try
             {
                 if (id == Guid.Empty)
-                    return BadRequest("EL ID del producto no es valido.");
+                    return BadRequest("El ID del producto no es valido.");
 
                 var responseDto = await _productRepository.DeleteProductById(id);
 

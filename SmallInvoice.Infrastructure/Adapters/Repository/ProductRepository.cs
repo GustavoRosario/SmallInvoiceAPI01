@@ -118,20 +118,18 @@ namespace SmallInvoice.Infrastructure.Adapters.Repository
 
             if (product == null)
                 return productDto;
-            else
-            {
-                productDto = new ProductDto()
-                {
-                    ProductId = product.ProductId,
-                    RefId = product.RefId,
-                    ProductTypeId = product.ProductTypeId,
-                    ProductName = product.ProductName,
-                    ProcessModeId = product.ProcessModeId,
-                    Active = product.Active
-                };
 
-                return productDto;
-            }
+            productDto = new ProductDto()
+            {
+                ProductId = product.ProductId,
+                RefId = product.RefId,
+                ProductTypeId = product.ProductTypeId,
+                ProductName = product.ProductName,
+                ProcessModeId = product.ProcessModeId,
+                Active = product.Active
+            };
+
+            return productDto;
         }
 
         public async Task<bool> ProductExits(string productName)
@@ -166,7 +164,7 @@ namespace SmallInvoice.Infrastructure.Adapters.Repository
                 };
             }
 
-            return new ProductResponseDto() { IsSuccess = false, Message = "No se ha podido eliminar el producto." }; ;
+            return new ProductResponseDto() { IsSuccess = false, Message = "No se ha podido eliminar el producto." }; 
         }
     }
 }

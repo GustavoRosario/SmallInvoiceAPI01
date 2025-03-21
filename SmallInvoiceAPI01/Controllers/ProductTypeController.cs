@@ -80,56 +80,69 @@ namespace SmallInvoiceAPI01.Controllers
         }
 
         [HttpGet("GetAll")]
-        public async Task<List<ProductTypeDto>> GetProductType()
+        public async Task<ActionResult<List<ProductTypeDto>>> GetProductType()
         {
-
-            List<ProductTypeDto>? productTypeDto = new List<ProductTypeDto>();
-
             try
             {
-                productTypeDto = await _productTypeRepository.GetProductTypes();
+                var productTypeDto = await _productTypeRepository.GetProductTypes();
+
+                return Ok(productTypeDto);
             }
             catch (Exception ex)
             {
                 _logger.Error("Error has been in GetProductType method : " + ex.Message);
-            }
 
-            return await Task.Run(() => productTypeDto);
+                return StatusCode(500, $"Error : {ex}");
+            }
         }
 
         [HttpGet("GetById/{id}")]
-        public async Task<ProductTypeDto> GetProductTypeById(Guid id)
+        public async Task<ActionResult<ProductTypeDto>> GetProductTypeById(Guid id)
         {
-
-            ProductTypeDto? productTypeDto = new ProductTypeDto();
-
             try
             {
-                productTypeDto = await _productTypeRepository.GetProductTypeById(id);
+                if (id == Guid.Empty)
+                    return BadRequest("El ID del tipo de producto no es valido.");
+
+                var productTypeDto = await _productTypeRepository.GetProductTypeById(id);
+
+                if (productTypeDto == null)
+                    return NotFound($"No se encontro el tipo de producto con ID {id}.");
+
+                return Ok(productTypeDto);
             }
             catch (Exception ex)
             {
                 _logger.Error("Error has been in GetProductTypeById method : " + ex.Message);
-            }
 
-            return await Task.Run(() => productTypeDto);
+                return StatusCode(500, $"Error : {ex}");
+            }
         }
 
         [HttpPost("DeleteById")]
-        public async Task<ProductTypeResponseDto> DeleteProductTypeById(Guid Id)
+        public async Task<ActionResult<ProductTypeResponseDto>> DeleteProductTypeById(Guid id)
         {
-            var responseDto = new ProductTypeResponseDto();
-
             try
             {
-                responseDto = await _productTypeRepository.DeleteProductTypeById(Id);
+                if (id == Guid.Empty)
+                    return BadRequest("El ID del tipo de producto no es valido.");
+
+                var responseDto = new ProductTypeResponseDto();
+
+                responseDto = await _productTypeRepository.DeleteProductTypeById(id);
+
+                if (responseDto.IsSuccess)
+                    return Ok(responseDto);
+                else
+                    return NotFound(responseDto);
+
             }
             catch (Exception ex)
             {
                 _logger.Error("Error has been in DeleteProductTypeById method : " + ex.Message);
-            }
 
-            return await Task.Run(() => responseDto);
+                return StatusCode(500, $"Error : {ex}");
+            }
         }
     }
 }
